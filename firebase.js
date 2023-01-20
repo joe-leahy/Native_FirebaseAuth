@@ -6,12 +6,12 @@ import 'firebase/compat/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCByzUOWxAXe6YhTgeE0XzQ9B3E32vPlW4",
-  authDomain: "fir-auth-47693.firebaseapp.com",
-  projectId: "fir-auth-47693",
-  storageBucket: "fir-auth-47693.appspot.com",
-  messagingSenderId: "768560735493",
-  appId: "1:768560735493:web:3eca6aa40dd0cbfe67836c"
+  apiKey: "AIzaSyCpZy4LXy67m8gtr_0KwOeAgKXk1Y_FfEI",
+  authDomain: "weather-af400.firebaseapp.com",
+  projectId: "weather-af400",
+  storageBucket: "weather-af400.appspot.com",
+  messagingSenderId: "346397525517",
+  appId: "1:346397525517:web:0c94b6d4a7af3d3d58b744"
 };
 
 // Initialize Firebase

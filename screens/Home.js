@@ -1,37 +1,79 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { Alert, StyleSheet, Text, TouchableOpacity, View, SafeAreaView, ActivityIndicator, Image } from 'react-native'
+import React,{useEffect, useState} from 'react'
 import { auth } from '../firebase'
 import { useNavigation } from '@react-navigation/core'
 import { LinearGradient } from 'expo-linear-gradient'
+import { WEATHER_API_KEY, WEATHER_API_URL, GEO_API_URL } from "../api";
+import * as Location from 'expo-location'
 
 
 const Home = () => {
 
-  const navigation = useNavigation()
+  const [forecast, setForecast] = useState(null);
+  const [weather, setWeather] = useState(null)
+  const [refreshing, setRefreshing] = useState(false);
 
-  const handleSignOut = () => {
-    auth
-    .signOut()
-    .then(()=>{
-      navigation.replace("Login")
-    })
-    .catch(error => alert(error.message))
+
+  const loadWeather =  async () =>{
+    setRefreshing(true);
+    const {status} = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted'){
+      Alert.alert('No Permission')
+    }
+    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
+
+    const response = await fetch(`${WEATHER_API_URL}/weather?lat=${location.coords.latitude}&lon=${location.coords.longitude}&appid=${WEATHER_API_KEY}&units=imperial`)
+    const data = await response.json()
+
+    if(!response.ok){
+      Alert.alert("Something went wrong")
+    } else{
+      setWeather(data)
+    }
+    setRefreshing(false)
+  }
+
+  useEffect(()=>{
+    loadWeather()
+  },[])
+
+  if(!weather){
+    <SafeAreaView style={styles.loading}>
+      <ActivityIndicator size='large'/>
+    </SafeAreaView>
   }
 
   return (
     <View style={styles.container}>
+
       <LinearGradient
         // Background Linear Gradient
         colors={['#F29849', '#82C9D9']}
         style={styles.background}
       />
-      <Text style={styles.text}>Welcome: {auth.currentUser.email}</Text>
-      <TouchableOpacity
-      onPress={handleSignOut}
-      style={styles.button}
-      >
-        <Text style={styles.buttonText}>Sign Out</Text>
-      </TouchableOpacity>
+      {weather ?
+      <>
+      <Text>{weather.name}</Text>
+      <Image
+        style = {styles.icon}
+        source= {{uri: `http://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png`}}
+      />
+
+    <Text>Sky: {weather.weather[0].description}</Text>
+    <Text>Temp: {Math.round(weather.main.temp)} °F</Text>
+    <Text>Feels Like: {Math.round(weather.main.feels_like)} °F</Text>
+    <Text>Pressure: {weather.main.pressure}</Text>
+    <Text>Humidity: {weather.main.humidity}%</Text>
+    <Text>Wind: {Math.round(weather.wind.speed)} mph</Text>
+    </>
+      :
+    <SafeAreaView style={styles.loading}>
+      <ActivityIndicator size='large'/>
+    </SafeAreaView>}
+
+
+
+
     </View>
   )
 }
@@ -69,5 +111,9 @@ const styles = StyleSheet.create({
     fontWeight:'700',
     fontSize: 16,
     flexDirection:'column'
-    }
+    },
+  icon:{
+    height:300,
+    width:250
+  }
 })
