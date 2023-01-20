@@ -40,11 +40,6 @@ const Current = () => {
 
   return (
     <>
-  <LinearGradient
-        colors={['#2D4B73', '#99B4BF']}
-        style={styles.background}
-
-      />
     <View style={styles.container}>
 
 
@@ -111,14 +106,6 @@ const styles = StyleSheet.create({
     shadowOpacity:.3,
     paddingTop:0,
     padding:20,
-  },
-  background: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: '100%',
-    opacity:.8
   },
   top:{
     display:"flex",
