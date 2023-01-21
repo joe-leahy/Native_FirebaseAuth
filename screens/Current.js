@@ -9,10 +9,8 @@ import * as Location from 'expo-location'
 
 const Current = () => {
 
-  const [forecast, setForecast] = useState(null);
   const [weather, setWeather] = useState(null)
   const [refreshing, setRefreshing] = useState(false);
-
 
   const loadWeather =  async () =>{
     setRefreshing(true);
@@ -37,12 +35,9 @@ const Current = () => {
     loadWeather()
   },[])
 
-
   return (
     <>
     <View style={styles.container}>
-
-
       {weather ?
       <>
       <View style={styles.top}>
@@ -159,7 +154,7 @@ const styles = StyleSheet.create({
     color:'white'
   },
   icon:{
-    height:150,
+    height:120,
     width:100
     }
 })
